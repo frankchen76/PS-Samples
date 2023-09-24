@@ -131,6 +131,64 @@ function New-PnPFileVersionBatchDeleteJob {
     Write-Host "Success. Versions specified will be deleted in the upcoming days."
 }
 
+function Remove-PnPFileVersionBatchDeleteJob {
+    <#
+    .SYNOPSIS
+        Cancels any further progress of file version batch deletion. 
+
+    .DESCRIPTION
+        Cancels any further progress of file version batch deletion. Note that
+        any version that are already deleted will not be reverted.
+
+    .PARAMETER Site 
+        A Microsoft.SharePoint.Client.Site object that has the ongoing job.
+
+    .PARAMETER Library 
+        A Microsoft.SharePoint.Client.List object that has the ongoing job.
+
+    .EXAMPLE
+        # Example 1. Stopping onging site-scoped version deletion job. 
+        Connect-PnPOnline -Url "https://contoso.sharepoint.com" -UseWebLogin
+        $Site = Get-PnPSite
+        Remove-PnPFileVersionBatchDeleteJob -Site $Site
+
+    .EXAMPLE
+        # Example 2. Stopping onging list version deletion job. 
+        Connect-PnPOnline -Url "https://contoso.sharepoint.com" -UseWebLogin
+        $Library = Get-PnPList Documents
+        Remove-PnPFileVersionBatchDeleteJob -Library $Library
+    #>
+    [CmdletBinding(
+        SupportsShouldProcess,
+        ConfirmImpact = 'High'
+    )]
+    Param(
+        [Parameter(Mandatory,
+            ParameterSetName = 'SiteScope')]
+        [Microsoft.SharePoint.Client.Site] $Site,
+
+        [Parameter(Mandatory,
+            ParameterSetName = 'LibraryScope')]
+        [Microsoft.SharePoint.Client.List] $Library
+    )
+
+    if (-not $PSCmdlet.ShouldProcess($PSCmdlet.ParameterSetName, "stop further version deletion batches")) {
+        Write-Host "Did not receive confirmation to stop deletion. Continuing to delete specified versions."
+        return 
+    }
+
+    $Ctx = Get-PnPContext
+    if ($PsCmdlet.ParameterSetName -eq "SiteScope") {
+        $ClientObject = $Site
+    }
+    else {
+        $ClientObject = $Library
+    }
+
+    $ClientObject.CancelDeleteFileVersions()
+    $Ctx.ExecuteQuery()
+    Write-Host "Future deletion is successfully stopped."
+}
 
 function ApplyExpirationToSC {
     param(

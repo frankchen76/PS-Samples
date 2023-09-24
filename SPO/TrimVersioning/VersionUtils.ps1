@@ -32,4 +32,3 @@ function Test-AssemblyBuildVersion {
     $ci = Get-ChildItem $assembly.Location
     return $ci.VersionInfo.ProductBuildPart -ge $BuildVersion
 }
-

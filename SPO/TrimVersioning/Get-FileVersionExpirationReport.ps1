@@ -119,6 +119,71 @@ function Get-PnPFileVersionExpirationReport {
         }.GetNewClosure()
     }
 }
+
+function Get-PnPFileVersions {
+    <#
+    .SYNOPSIS
+
+        Retrieve a file versions with SnapshotDate and ExpirationDate
+
+    .DESCRIPTION
+
+        Retrieves the version history of a file with its SnapshotDate and ExpirationDate
+
+    .PARAMETER Url
+
+        The server relative URL to the file.
+
+    .EXAMPLE
+
+        Connect-PnPOnline -Url https://contoso.sharepoint.com -UseWebLogin
+        $FileVersions = Get-PnPFileVersions -Url "/Shared Documents/MyFile.txt"
+        $FileVersions | Select-Object VersionLabel, SnapshotDate, ExpirationDate
+
+    #>
+
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string] $Url
+    )
+    if (-not ([System.Management.Automation.PSTypeName]'VersionUtils.PropertyUtils2').Type) {
+        Add-Type `
+            -IgnoreWarnings `
+            -ReferencedAssemblies @( 
+            [System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client").Location,
+            [System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client.Runtime").Location,
+            [System.Reflection.Assembly]::Load("PnP.Framework").Location,
+            "netstandard",
+            "System.Runtime",
+            "System.Linq.Expressions") `
+            -TypeDefinition @"
+                using Microsoft.SharePoint.Client;
+                using PnP.Framework;
+
+                namespace VersionUtils
+                {
+                    public class PropertyUtils2
+                    {   
+                        public static FileVersionCollection LoadFileVersions(PnPClientContext context, File file)
+                        {
+                            context.Load(file, f => f.Versions.IncludeWithDefaultProperties(v => v.SnapshotDate, v => v.ExpirationDate));
+                            context.ExecuteQuery();
+                            return file.Versions;
+                        }
+                    }
+                } 
+"@
+    }
+
+    $Ctx = Get-PnPContext
+    $File = Get-PnPFile -Url $Url
+
+    $fileVersions = [VersionUtils.PropertyUtils2]::LoadFileVersions($Ctx, $File);
+
+    return $fileVersions;
+}
+
 function ConnectToSC {
     param(
         [string]$ClientId,
