@@ -12,6 +12,8 @@
 ##
 
 $siteUrl = "https://m365x725618.sharepoint.com/sites/TestScheduling"
+# "true" or "false". NOTE: the string value is case sensitive. 
+$enable = "true"
 Connect-PnPOnline -Url $siteUrl -Interactive -ForceAuthentication
 $accessToken = Get-PnPAccessToken -ResourceTypeName SharePoint
 $sitePageLib = Get-PnPList -Identity "Site Pages"
@@ -20,8 +22,9 @@ $headers = @{
     "Authorization" = "Bearer $($accessToken)"
     "Content-Type"  = "application/json"
 }
-$url = "https://m365x725618.sharepoint.com/sites/TestScheduling/_api/sitepages/pagesinlib(guid'$($sitePageLib.Id)')/setscheduling(false)"
+$url = "https://m365x725618.sharepoint.com/sites/TestScheduling/_api/sitepages/pagesinlib(guid'$($sitePageLib.Id)')/setscheduling($enable)"
 $result = Invoke-RestMethod -Headers $headers `
     -Uri $URL `
     -Method Post `
     -Body $null
+$result
