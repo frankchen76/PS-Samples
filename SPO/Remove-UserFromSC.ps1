@@ -132,6 +132,7 @@ foreach ($siteCollection in $siteCollections) {
     Delete-UserFromSC -siteUrl $siteCollection.Url -upn $upn
     $index++
 
+    # sleep 100ms to avoid throttling
     if ($index % 10 -eq 0) {
         Write-Host "Sleeping for 100 ms"
         Start-Sleep -Milliseconds 100
