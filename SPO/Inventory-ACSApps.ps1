@@ -117,7 +117,7 @@ function GetACSInfo {
 $scriptFullPath = $MyInvocation.MyCommand.Path
 $scriptPath = Split-Path $scriptFullPath
 
-$appInfo = Get-Content $("{0}\credential.json" -f $scriptPath) | ConvertFrom-Json
+$appInfo = Get-Content $("{0}\credential-725618.json" -f $scriptPath) | ConvertFrom-Json
 $clientId = $appInfo.ClientId
 $tenantName = $appInfo.TenantName
 $thumbprint = $appInfo.Thumbprint

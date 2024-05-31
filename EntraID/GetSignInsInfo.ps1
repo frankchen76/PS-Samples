@@ -21,14 +21,14 @@
 $scriptFullPath = $MyInvocation.MyCommand.Path
 $scriptPath = Split-Path $scriptFullPath
 
-$appInfo = Get-Content $("{0}\credential.json" -f $scriptPath) | ConvertFrom-Json
+$appInfo = Get-Content $("{0}\credential-626552.json" -f $scriptPath) | ConvertFrom-Json
 $clientId = $appInfo.ClientId
 $tenantName = $appInfo.TenantName
 $thumbprint = $appInfo.Thumbprint
 $siteUrl = $appInfo.SiteUrl
 
-$csvFile = $("{0}\EnterpriseApps.csv" -f $scriptPath)
-$csvResultFile = $("{0}\EnterpriseAppsSignIns.csv" -f $scriptPath)
+$csvFile = $("{0}\GetSignInsInfo.csv" -f $scriptPath)
+$csvResultFile = $("{0}\GetSignInsInfo-Result.csv" -f $scriptPath)
 $days = -90
 $csvRows = Import-Csv -Path $csvFile
 

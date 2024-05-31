@@ -1,2 +1,3 @@
-**/credential.json
+**/credential-*.json
+*-Result.csv
 SPO/InventoryUserPermissions-Result.csv
