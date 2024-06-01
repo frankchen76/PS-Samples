@@ -82,7 +82,7 @@ foreach ($site in $allSites) {
                             Group            = $GroupMember.Title
                             PermissionLevels = $pls
                         })
-                    Write-Host $("Site: '{0}', SGName: {1}, Permission: {2}." -f $site.Url, $GroupMember.Title, $pls)    
+                    Write-Host -ForegroundColor Green $("Site: '{0}', SGName: {1}, Permission: {2}." -f $site.Url, $GroupMember.Title, $pls)    
                 }
             }
         }
@@ -96,7 +96,7 @@ foreach ($site in $allSites) {
                         Group            = $ra.Member.Title
                         PermissionLevels = $pls
                     })
-                Write-Host $("Site: '{0}', SGName: {1}, Permission: {2}." -f $site.Url, $ra.Member.Title, $pls)    
+                Write-Host -ForegroundColor Green $("Site: '{0}', SGName: {1}, Permission: {2}." -f $site.Url, $ra.Member.Title, $pls)    
 
             }
         }
