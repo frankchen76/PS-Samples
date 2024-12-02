@@ -13,3 +13,5 @@ Set document library expiration for a site collection. the following logic is ap
 ## VersionUtils.ps1
 Versioning util script
 
+## Inventory-DocLibVersions.ps1
+Inventory document libraries' version settings for specific site collections defined in a CSV file. It can enumerate all sub sites. 
